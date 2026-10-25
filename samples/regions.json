@@ -82,5 +82,107 @@
    469,
    375
   ]
+ },
+ "real_5": {
+  "roi": [
+   75,
+   305,
+   798,
+   630
+  ],
+  "white": null,
+  "mask": "samples/real_5_mask.png",
+  "group": "woman",
+  "lab": {
+   "hb": 7.8,
+   "sex": "F",
+   "age": 29,
+   "anaemic": true
+  }
+ },
+ "real_14": {
+  "roi": [
+   0,
+   428,
+   797,
+   756
+  ],
+  "white": null,
+  "mask": "samples/real_14_mask.png",
+  "group": "woman",
+  "lab": {
+   "hb": 9.1,
+   "sex": "F",
+   "age": 29,
+   "anaemic": true
+  }
+ },
+ "real_30": {
+  "roi": [
+   0,
+   556,
+   712,
+   921
+  ],
+  "white": null,
+  "mask": "samples/real_30_mask.png",
+  "group": "man",
+  "lab": {
+   "hb": 11.2,
+   "sex": "M",
+   "age": 21,
+   "anaemic": true
+  }
+ },
+ "real_28": {
+  "roi": [
+   32,
+   526,
+   798,
+   898
+  ],
+  "white": null,
+  "mask": "samples/real_28_mask.png",
+  "group": "man",
+  "lab": {
+   "hb": 11.2,
+   "sex": "M",
+   "age": 20,
+   "anaemic": true
+  }
+ },
+ "real_19": {
+  "roi": [
+   26,
+   531,
+   520,
+   834
+  ],
+  "white": null,
+  "mask": "samples/real_19_mask.png",
+  "group": "man",
+  "lab": {
+   "hb": 12.6,
+   "sex": "M",
+   "age": 21,
+   "anaemic": true
+  }
+ },
+ "real_53": {
+  "roi": [
+   59,
+   606,
+   742,
+   920
+  ],
+  "white": null,
+  "mask": "samples/real_53_mask.png",
+  "group": "man",
+  "lab": {
+   "hb": 13.8,
+   "sex": "M",
+   "age": 32,
+   "anaemic": false
+  }
  }
 }

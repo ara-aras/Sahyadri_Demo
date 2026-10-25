@@ -24,7 +24,7 @@
   .samples button, .btn { border:1px solid #d9d6e6; background:#fff; color:var(--navy); border-radius:999px; padding:7px 13px; font:500 13px "Inter"; cursor:pointer; }
   .samples button.on { background:var(--navy); color:#fff; border-color:var(--navy); }
   .btn.primary { background:var(--rasp); border-color:var(--rasp); color:#fff; font:700 16px "Inter"; padding:13px 16px; width:100%; margin-top:14px; border-radius:12px; }
-  canvas { width:100%; height:auto; border-radius:14px; background:#ddd; display:block; cursor:crosshair; }
+  canvas { max-width:100%; max-height:560px; width:auto; height:auto; margin:0 auto; border-radius:14px; background:#ddd; display:block; cursor:crosshair; }
   .hint { font-size:12px; color:var(--mut); margin:8px 0 0; }
   .steps { display:flex; flex-direction:column; gap:6px; }
   .step { display:flex; justify-content:space-between; gap:8px; padding:9px 12px; border-radius:10px; background:var(--gl); font-size:13px; }
@@ -49,7 +49,7 @@
   <span class="sp"></span>
   <button id="lang">ಕನ್ನಡ</button>
 </header>
-<div class="warn" data-i18n="warn"><b>MVP demo.</b> Sample images are SYNTHETIC test images (not patient data). The pallor index uses a baseline colour rule; the trained model (CP-AnemiC + Eyes-defy-anemia) replaces it in the finale.</div>
+<div class="warn" data-i18n="warn"><b>MVP demo.</b> "Real patient" photos: Eyes-defy-anemia dataset (India, CC BY-SA). Other samples are SYNTHETIC test images. The pallor index uses a baseline colour rule; the trained model (CP-AnemiC + Eyes-defy-anemia) replaces it in the finale.</div>
 <main>
   <section class="card">
     <h2 data-i18n="s1">1 · Capture (eye + colour card)</h2>
@@ -89,7 +89,8 @@
   </section>
 </main>
 <script>
-const SAMPLES = ["healthy_daylight","anaemic_daylight","borderline_daylight","healthy_warm_tubelight","anaemic_warm_tubelight","blurry_retake"];
+const SAMPLES = ["real_5","real_14","real_28","real_30","real_19","real_53","healthy_daylight","anaemic_daylight","borderline_daylight","healthy_warm_tubelight","anaemic_warm_tubelight","blurry_retake"];
+const LABEL = (n) => n.startsWith("real_") ? "real patient #" + n.slice(5) : n.replaceAll("_", " ");
 const T = {
   en: {}, // filled from the DOM on load
   kn: {
@@ -124,12 +125,13 @@ $("lang").onclick = () => {
 };
 
 const cv = $("cv"), ctx = cv.getContext("2d", { willReadFrequently: true });
-let img = null, roi = null, white = null, mode = "roi", last = null, drag = null, regions = {};
+let lab = null;
+let img = null, roi = null, white = null, mask = null, mode = "roi", last = null, drag = null, regions = {};
 
 fetch("samples/regions.json").then((r) => r.json()).then((j) => (regions = j)).catch(() => {});
 SAMPLES.forEach((n) => {
   const b = document.createElement("button");
-  b.textContent = n.replaceAll("_", " ");
+  b.textContent = LABEL(n);
   b.onclick = () => {
     document.querySelectorAll(".samples button").forEach((x) => x.classList.remove("on"));
     b.classList.add("on");
@@ -143,13 +145,16 @@ function load(src, reg) {
   im.onload = () => {
     img = im;
     cv.width = im.naturalWidth; cv.height = im.naturalHeight;
-    roi = reg ? reg.roi.slice() : null; white = reg ? reg.white.slice() : null;
+    roi = reg ? reg.roi.slice() : null; white = reg && reg.white ? reg.white.slice() : null; mask = null; lab = reg && reg.lab ? reg.lab : null;
+    if (reg && reg.group) $("grp").value = reg.group;
+    if (reg && reg.mask) { const m = new Image(); m.onload = () => { const c = document.createElement("canvas"); c.width = m.width; c.height = m.height; const x = c.getContext("2d"); x.drawImage(m, 0, 0); mask = x.getImageData(0, 0, m.width, m.height).data; draw(); }; m.src = reg.mask; }
     $("steps").innerHTML = ""; $("result").innerHTML = ""; $("meter").hidden = $("scale").hidden = true;
     draw();
   };
   im.src = src;
 }
 $("file").onchange = (e) => { const f = e.target.files[0]; if (f) load(URL.createObjectURL(f), null); };
+function maskedMean() { ctx.drawImage(img, 0, 0); const d = ctx.getImageData(0, 0, cv.width, cv.height).data; draw(); let r=0,g=0,b=0,n=0; for (let i=0;i<d.length;i+=4) if (mask[i] > 127) { r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; } return [r/n,g/n,b/n]; }
 $("mRoi").onclick = () => (mode = "roi");
 $("mWhite").onclick = () => (mode = "white");
 
@@ -162,7 +167,8 @@ function draw() {
   if (!img) return;
   ctx.drawImage(img, 0, 0);
   ctx.lineWidth = 3;
-  if (roi) { ctx.strokeStyle = "#22c55e"; ctx.strokeRect(roi[0], roi[1], roi[2]-roi[0], roi[3]-roi[1]); }
+  if (mask) { const o = ctx.getImageData(0, 0, cv.width, cv.height); for (let i=0;i<o.data.length;i+=4) if (mask[i] > 127) { o.data[i] = o.data[i]*0.55; o.data[i+1] = o.data[i+1]*0.55 + 115; o.data[i+2] = o.data[i+2]*0.55 + 40; } ctx.putImageData(o, 0, 0); }
+  else if (roi) { ctx.strokeStyle = "#22c55e"; ctx.strokeRect(roi[0], roi[1], roi[2]-roi[0], roi[3]-roi[1]); }
   if (white) { ctx.strokeStyle = "#3b82f6"; ctx.strokeRect(white[0], white[1], white[2]-white[0], white[3]-white[1]); }
 }
 
@@ -174,13 +180,15 @@ function pixels(b) {
 }
 function mean(d) { let r=0,g=0,bl=0,n=d.data.length/4; for (let i=0;i<d.data.length;i+=4){r+=d.data[i];g+=d.data[i+1];bl+=d.data[i+2];} return [r/n,g/n,bl/n]; }
 function sharpness() {
-  // Laplacian variance over the whole frame (detects motion / focus blur)
+  // Laplacian variance around the eyelid region (detects motion / focus blur where it matters)
   ctx.drawImage(img, 0, 0);
-  const w = cv.width, h = cv.height, d = ctx.getImageData(0, 0, w, h).data; draw();
+  const pad = 60, x0 = Math.max(0, roi[0]-pad), y0 = Math.max(0, roi[1]-pad);
+  const w = Math.min(cv.width, roi[2]+pad) - x0, h = Math.min(cv.height, roi[3]+pad) - y0;
+  const d = ctx.getImageData(x0, y0, w, h).data; draw();
   const gray = new Float32Array(w*h);
   for (let i=0;i<w*h;i++) gray[i] = 0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];
   let s=0, s2=0, n=0;
-  for (let y=1;y<h-1;y+=2) for (let x=1;x<w-1;x+=2) { const i=y*w+x; const l = 4*gray[i]-gray[i-1]-gray[i+1]-gray[i-w]-gray[i+w]; s+=l; s2+=l*l; n++; }
+  for (let y=1;y<h-1;y++) for (let x=1;x<w-1;x++) { const i=y*w+x; const l = 4*gray[i]-gray[i-1]-gray[i+1]-gray[i-w]-gray[i+w]; s+=l; s2+=l*l; n++; }
   return s2/n - (s/n)**2;
 }
 // Pallor index: redness of the conjunctiva relative to green, after card calibration
@@ -189,23 +197,25 @@ const BANDS = { woman:[0.25,0.38], preg:[0.27,0.40], child:[0.27,0.40], man:[0.2
 
 $("run").onclick = () => {
   if (!img) return alert("Pick a sample or upload a photo first.");
-  if (!roi || !white) return alert("Draw both boxes: lower eyelid and white card patch.");
+  if (!roi && !mask) return alert("Draw a box on the lower eyelid (and on the white card patch if the photo has one).");
   const sharp = sharpness();
-  const raw = mean(pixels(roi));
-  const wp = mean(pixels(white));
+  const raw = mask ? maskedMean() : mean(pixels(roi));
+  const hasCard = !!white;
+  const wp = hasCard ? mean(pixels(white)) : [245, 245, 245];
   const lum = 0.299*raw[0]+0.587*raw[1]+0.114*raw[2];
   const gain = wp.map((c) => 245 / Math.max(c, 1));
   const cal = raw.map((c, i) => Math.min(255, c * gain[i]));
   const syms = [...document.querySelectorAll(".sym")].filter((c) => c.checked).length;
-  const [hi, lo] = BANDS[$("grp").value];
+  let [hi, lo] = BANDS[$("grp").value];
+  if (!hasCard) { hi -= 0.04; lo += 0.04; } // no calibration: widen the "not sure" band
   const pRaw = pallor(raw), pCal = pallor(cal);
-  const qOk = sharp > 60 && lum > 40 && lum < 235 && Math.min(...wp) > 60;
+  const qOk = sharp > 5 && lum > 40 && lum < 235 && Math.min(...wp) > 60;
   let verdict;
   if (!qOk) verdict = "RET";
   else if (pCal <= hi) verdict = "HIGH";
   else if (pCal < lo) verdict = "UNS";
   else verdict = syms >= 3 && pCal < lo + 0.05 ? "UNS" : "LOW";
-  last = { sharp, lum, wp, gain, raw, cal, pRaw, pCal, syms, hi, lo, verdict, qOk };
+  last = { sharp, lum, wp, gain, raw, cal, pRaw, pCal, syms, hi, lo, verdict, qOk, hasCard, masked: !!mask, lab };
   render(last);
   speak(t(verdict));
 };
@@ -216,12 +226,15 @@ function render(r) {
   const rgb = (a) => a.map((x) => Math.round(x)).join(", ");
   const cast = Math.max(...r.gain) / Math.min(...r.gain);
   $("steps").innerHTML =
-    row("Quality: sharpness", r.sharp > 60 ? `OK (${Math.round(r.sharp)})` : `BLURRY (${Math.round(r.sharp)})`, r.sharp > 60 ? "ok" : "bad") +
+    row("Quality: sharpness", r.sharp > 5 ? `OK (${Math.round(r.sharp)})` : `BLURRY (${Math.round(r.sharp)})`, r.sharp > 5 ? "ok" : "bad") +
+    (r.masked ? row("Eyelid region", "dataset segmentation mask", "ok") : "") +
     row("Quality: exposure", r.lum > 40 && r.lum < 235 ? `OK (${Math.round(r.lum)})` : "BAD", r.lum > 40 && r.lum < 235 ? "ok" : "bad") +
-    row("Colour card white patch", `RGB ${rgb(r.wp)} → light cast ×${f(cast)}`, cast > 1.15 ? "mid" : "ok") +
+    (r.hasCard ? row("Colour card white patch", `RGB ${rgb(r.wp)} → light cast ×${f(cast)}`, cast > 1.15 ? "mid" : "ok") : row("Colour card", "not in photo → calibration skipped, wider unsure band", "mid")) +
     row("Conjunctiva colour (raw → calibrated)", `${rgb(r.raw)} → ${rgb(r.cal)}`, "") +
     row("Pallor index (raw / calibrated)", `${f(r.pRaw)} / <u>${f(r.pCal)}</u>`, "") +
-    row("Symptoms reported", `${r.syms} / 5`, r.syms >= 3 ? "mid" : "ok");
+    row("Symptoms reported", `${r.syms} / 5`, r.syms >= 3 ? "mid" : "ok") +
+    (r.lab ? (() => { const referred = r.verdict !== "LOW"; const right = referred === r.lab.anaemic;
+      return row(`Lab Hb (dataset ground truth, ${r.lab.sex}, ${r.lab.age} y)`, `${r.lab.hb} g/dL · ${r.lab.anaemic ? "anaemic" : "normal"} → ${right ? "✓ correct call" : "✗ missed"}`, right ? "ok" : "bad"); })() : "");
   const pct = (v) => Math.max(0, Math.min(100, ((v - 0.05) / 0.55) * 100));
   $("meter").hidden = $("scale").hidden = !r.qOk;
   $("mCal").style.left = pct(r.pCal) + "%";
