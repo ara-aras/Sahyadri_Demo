@@ -1,0 +1,178 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>RaktaScan video</title>
+<style>
+  :root { --navy:#211d4f; --rasp:#c93d6a; --light:#f1f1f4; --ink:#1d1b33; --mut:#6b6880; }
+  * { box-sizing:border-box; margin:0; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:var(--light); font-family:"Inter",sans-serif; color:var(--ink); }
+  .sc { position:absolute; inset:0; opacity:0; }
+  .a { position:absolute; opacity:0; will-change:transform,opacity; }
+  .h { font-family:"Inter Display","Inter",sans-serif; font-weight:800; letter-spacing:-.035em; line-height:.98; }
+  .navy { background:var(--navy); color:#fff; } .rasp { background:var(--rasp); color:#fff; } .lt { background:var(--light); }
+  .r { color:var(--rasp); } .pk { color:#f2a7bf; }
+  .card { background:#fff; border-radius:22px; box-shadow:0 30px 60px -30px #211d4f55; overflow:hidden; }
+  .lab { font:700 22px "Inter"; text-transform:uppercase; letter-spacing:.12em; }
+  .browser { background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 50px 90px -40px #000a; }
+  .browser .bar { height:44px; background:#e9e8ef; display:flex; align-items:center; gap:9px; padding:0 18px; }
+  .browser .bar i { width:13px; height:13px; border-radius:50%; background:#c9c6d6; display:block; }
+  .browser .bar span { margin-left:16px; background:#fff; border-radius:8px; padding:5px 16px; font:500 15px "Inter"; color:var(--mut); }
+  .shot { position:absolute; inset:44px 0 0 0; overflow:hidden; }
+  .shot img { position:absolute; width:100%; top:0; left:0; opacity:0; transform-origin: 70% 60%; }
+  .step { width:300px; height:330px; padding:30px; display:flex; flex-direction:column; gap:14px; }
+  .step .n { font:800 64px "Inter Display"; color:var(--rasp); }
+  .step .t { font:800 32px "Inter Display"; letter-spacing:-.02em; }
+  .step .d { font:400 21px "Inter"; color:var(--mut); line-height:1.35; }
+  .chip { display:inline-block; border-radius:999px; padding:12px 26px; font:700 28px "Inter"; color:#fff; }
+  .stat .big { font:800 150px "Inter Display"; letter-spacing:-.05em; line-height:1; }
+  .stat .big b { color:var(--rasp); }
+  .stat .s { font:400 26px "Inter"; opacity:.8; margin-top:10px; }
+  .src { font:400 18px "Inter"; opacity:.6; }
+</style></head><body>
+
+<!-- S1 hook -->
+<section class="sc lt" data-in="0" data-out="6.2">
+  <div class="a h" style="left:140px;top:300px;font-size:140px" data-in=".3">Anaemia is</div>
+  <div class="a h" style="left:140px;top:450px;font-size:140px" data-in=".9">usually found</div>
+  <div class="a h r" style="left:140px;top:600px;font-size:140px" data-in="1.6">too late.</div>
+  <div class="a" style="left:1260px;top:250px;width:520px;height:600px" data-in="2.4" data-fx="scale">
+    <div class="card" style="width:520px;height:600px;padding:22px">
+      <img src="samples/anaemic_daylight.jpg" style="width:100%;border-radius:14px">
+      <div class="lab r" style="margin-top:22px">Pale conjunctiva</div>
+      <div style="font:400 22px Inter;color:var(--mut);margin-top:8px">The lower eyelid is one of the oldest signs of anaemia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 stats -->
+<section class="sc navy" data-in="6" data-out="13.2">
+  <div class="a stat" style="left:140px;top:250px" data-in="6.4">
+    <div class="big"><span data-count="0,57,6.4,1.6">0</span><b>%</b></div>
+    <div class="s" style="font-size:34px;opacity:.9">of Indian women aged 15 to 49 are anaemic</div>
+  </div>
+  <div class="a stat" style="left:1150px;top:250px;padding-left:50px;border-left:2px solid #ffffff30" data-in="8.2">
+    <div class="big" style="font-size:110px"><span data-count="0,67,8.2,1.4">0</span><b>%</b></div>
+    <div class="s">of children aged 6 to 59 months</div>
+  </div>
+  <div class="a h" style="left:140px;top:640px;font-size:64px;width:1600px" data-in="10">A blood test needs a lab. <span class="pk">Many rural PHCs can't spare one for everyone.</span></div>
+  <div class="a src" style="left:140px;top:960px" data-in="6.6">Source: NFHS-5 (2019-21), MoHFW</div>
+</section>
+
+<!-- S3 colour problem -->
+<section class="sc lt" data-in="13" data-out="21.2">
+  <div class="a h" style="left:140px;top:120px;font-size:96px" data-in="13.3">Phones see colour</div>
+  <div class="a h r" style="left:140px;top:225px;font-size:96px" data-in="13.8">differently.</div>
+  <div class="a" style="left:140px;top:420px" data-in="15" data-fx="left">
+    <div class="card" style="width:760px;padding:20px"><img src="samples/anaemic_daylight.jpg" style="width:100%;border-radius:12px">
+      <div style="display:flex;justify-content:space-between;margin-top:14px"><span class="lab">Daylight</span><span class="lab r">Reads: pale</span></div></div>
+  </div>
+  <div class="a" style="left:1020px;top:420px" data-in="16.2" data-fx="left">
+    <div class="card" style="width:760px;padding:20px"><img src="samples/anaemic_warm_tubelight.jpg" style="width:100%;border-radius:12px">
+      <div style="display:flex;justify-content:space-between;margin-top:14px"><span class="lab">Tube-light</span><span class="lab" style="color:#d99a1e">Reads: borderline?</span></div></div>
+  </div>
+  <div class="a" style="left:1060px;top:180px;font:500 30px Inter;color:var(--mut);width:700px" data-in="17.4">Same pale eye. A tool that trusts raw colour can wave this patient through.</div>
+</section>
+
+<!-- S4 brand -->
+<section class="sc rasp" data-in="21" data-out="26.2">
+  <div class="a lab" style="left:140px;top:330px;opacity:.8" data-in="21.3">Introducing</div>
+  <div class="a h" style="left:140px;top:380px;font-size:200px" data-in="21.6">RaktaScan</div>
+  <div class="a" style="left:146px;top:620px;font:500 44px Inter;width:1500px;line-height:1.25" data-in="22.6">Anaemia screening on the phone an ASHA worker already carries.<br>It calibrates for every camera and refers when it isn't sure.</div>
+</section>
+
+<!-- S5 pipeline -->
+<section class="sc lt" data-in="26" data-out="34.2">
+  <div class="a h" style="left:140px;top:110px;font-size:80px" data-in="26.3">How it works</div>
+  <div class="a card step" style="left:140px;top:330px" data-in="27"><div class="n">01</div><div class="t">Capture</div><div class="d">Lower eyelid photo next to a ₹2 printed colour card.</div></div>
+  <div class="a card step" style="left:470px;top:330px" data-in="27.6"><div class="n">02</div><div class="t">Quality gate</div><div class="d">Blurry or dark photo? It asks for a retake.</div></div>
+  <div class="a card step" style="left:800px;top:330px" data-in="28.2"><div class="n">03</div><div class="t">Calibrate</div><div class="d">The card's white patch corrects camera and light.</div></div>
+  <div class="a card step" style="left:1130px;top:330px" data-in="28.8"><div class="n">04</div><div class="t">Estimate</div><div class="d">Pallor score + 5 symptom questions, by age group.</div></div>
+  <div class="a card step" style="left:1460px;top:330px;background:var(--navy);color:#fff" data-in="29.4"><div class="n" style="color:#f2a7bf">05</div><div class="t">Refer if unsure</div><div class="d" style="color:#ffffffb0">Borderline cases always go for a blood test.</div></div>
+  <div class="a" style="left:140px;top:760px;font:500 30px Inter;color:var(--mut)" data-in="30.4">Runs offline. Kannada, Tulu and English, with voice.</div>
+</section>
+
+<!-- S6 live demo -->
+<section class="sc lt" data-in="34" data-out="58.2">
+  <div class="a lab r" style="left:120px;top:120px" data-in="34.3">Live MVP</div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="34.5" data-out="38.2">Healthy eye,<br>daylight</div>
+  <div class="cap a" style="left:120px;top:420px" data-in="35.4" data-out="38.2"><span class="chip" style="background:#1f8a5b">Low risk</span></div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="38.3" data-out="42">Pale eye</div>
+  <div class="cap a" style="left:120px;top:340px" data-in="39" data-out="42"><span class="chip" style="background:#c62f45">Refer for blood test</span></div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="42.1" data-out="46">Borderline.<br><span class="r">It won't guess.</span></div>
+  <div class="cap a" style="left:120px;top:420px" data-in="42.8" data-out="46"><span class="chip" style="background:#d99a1e">Not sure: refer</span></div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="46.1" data-out="51.5">Pale eye under<br>tube-light</div>
+  <div class="cap a" style="left:120px;top:420px;width:560px" data-in="46.8" data-out="51.5">
+    <div style="font:500 26px Inter;color:var(--mut)">Pallor index</div>
+    <div class="h" style="font-size:120px"><span data-count="0.29,0.15,47.6,1.6,2">0.29</span></div>
+    <div style="font:500 26px Inter;color:var(--mut)">0.29 raw → 0.15 after card correction.<br><b style="color:var(--rasp)">Correctly referred.</b></div>
+  </div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="51.6" data-out="54.6">Blurry photo</div>
+  <div class="cap a" style="left:120px;top:340px" data-in="52.2" data-out="54.6"><span class="chip" style="background:#555">Retake photo</span></div>
+  <div class="cap a h" style="left:120px;top:170px;font-size:64px;width:560px" data-in="54.7" data-out="58.2">ಕನ್ನಡ<br>with voice</div>
+  <div class="a browser" style="left:720px;top:150px;width:1100px;height:732px" data-in="34.4" data-fx="right">
+    <div class="bar"><i></i><i></i><i></i><span>raktascan · MVP</span></div>
+    <div class="shot">
+      <img src="shots/healthy_daylight.png" data-in="34.4" data-out="38.2" data-zoom="1.0,1.12">
+      <img src="shots/anaemic_daylight.png" data-in="38.2" data-out="42" data-zoom="1.12,1.0">
+      <img src="shots/borderline_daylight.png" data-in="42" data-out="46" data-zoom="1.0,1.12">
+      <img src="shots/anaemic_warm_tubelight.png" data-in="46" data-out="51.5" data-zoom="1.0,1.18">
+      <img src="shots/blurry_retake.png" data-in="51.5" data-out="54.6" data-zoom="1.08,1.0">
+      <img src="shots/kannada.png" data-in="54.6" data-out="58.2" data-zoom="1.0,1.1">
+    </div>
+  </div>
+  <div class="a" style="left:120px;top:960px;font:400 18px Inter;color:var(--mut)" data-in="34.6">Sample images are synthetic test images, not patient data.</div>
+</section>
+
+<!-- S7 impact -->
+<section class="sc navy" data-in="58" data-out="65.2">
+  <div class="a h" style="left:140px;top:120px;font-size:72px" data-in="58.3">Built for a PHC, not a lab.</div>
+  <div class="a stat" style="left:140px;top:330px" data-in="59"><div class="big">₹<span data-count="0,2,59,1">0</span></div><div class="s">colour card per worker</div></div>
+  <div class="a stat" style="left:560px;top:330px" data-in="59.6"><div class="big">&lt;<span data-count="0,1,59.6,0.8">0</span><b>m</b></div><div class="s">per screening</div></div>
+  <div class="a stat" style="left:1000px;top:330px" data-in="60.2"><div class="big"><span data-count="9,0,60.2,1">9</span></div><div class="s">needles or strips</div></div>
+  <div class="a stat" style="left:1360px;top:330px" data-in="60.8"><div class="big" style="font-size:110px;line-height:1.36">Offline</div><div class="s">Kannada · Tulu · English</div></div>
+  <div class="a" style="left:140px;top:760px;font:500 30px Inter;opacity:.85;width:1600px" data-in="61.6">Finale: model trained on CP-AnemiC (710 images) + Eyes-defy-anemia (218), validated Ghana → India.</div>
+</section>
+
+<!-- S8 end -->
+<section class="sc rasp" data-in="65" data-out="73">
+  <div class="a h" style="left:140px;top:300px;font-size:130px" data-in="65.3">Screen early.</div>
+  <div class="a h" style="left:140px;top:440px;font-size:130px" data-in="65.9">Refer when unsure.</div>
+  <div class="a" style="left:146px;top:700px;font:700 34px Inter" data-in="66.8">RaktaScan · Team AAF11 · P A College of Engineering</div>
+  <div class="a" style="left:146px;top:760px;font:400 26px Inter;opacity:.85" data-in="67.2">DevHack 2026 · PS 3.1</div>
+  <div class="a" style="left:146px;top:960px;font:400 20px Inter;opacity:.75" data-in="67.6">Decision-support aid for screening. Not a diagnostic device.</div>
+</section>
+
+<script>
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => 1 - Math.pow(1 - x, 3);
+const secs = [...document.querySelectorAll('.sc')];
+function sceneOf(el) { return el.closest('.sc'); }
+window.render = (t) => {
+  for (const s of secs) {
+    const i = +s.dataset.in, o = +s.dataset.out;
+    s.style.opacity = t >= i && t < o ? Math.min(clamp((t - i) / 0.35), clamp((o - t) / 0.35)) : 0;
+  }
+  document.querySelectorAll('.a').forEach((el) => {
+    const sc = sceneOf(el);
+    const i = +el.dataset.in, o = el.dataset.out ? +el.dataset.out : +sc.dataset.out;
+    const p = ease(clamp((t - i) / 0.7)), q = clamp((o - t) / 0.3);
+    el.style.opacity = Math.min(p, q);
+    const fx = el.dataset.fx;
+    const d = (1 - p);
+    el.style.transform = fx === 'scale' ? `scale(${0.92 + 0.08 * p})` : fx === 'left' ? `translateX(${d * -80}px)` : fx === 'right' ? `translateX(${d * 120}px)` : `translateY(${d * 50}px)`;
+  });
+  document.querySelectorAll('.shot img').forEach((el) => {
+    const i = +el.dataset.in, o = +el.dataset.out;
+    const [z0, z1] = el.dataset.zoom.split(',').map(Number);
+    const p = clamp((t - i) / (o - i));
+    el.style.opacity = t >= i - 0.01 && t < o + 0.35 ? Math.min(clamp((t - i + 0.01) / 0.35), 1) : 0;
+    el.style.zIndex = Math.round(i * 10);
+    el.style.transform = `scale(${z0 + (z1 - z0) * ease(p)})`;
+  });
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    const [a, b, st, du, dec] = el.dataset.count.split(',').map(Number);
+    const p = ease(clamp((t - st) / du));
+    el.textContent = (a + (b - a) * p).toFixed(dec || 0);
+  });
+};
+render(0);
+</script>
+</body></html>
